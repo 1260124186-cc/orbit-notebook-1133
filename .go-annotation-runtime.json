@@ -1,0 +1,15 @@
+{
+  "shape": "cli",
+  "cli": {
+    "command": "go run ./cmd/orbit-notebook capture --home .runtime-cli --target M42 --instrument scope-a --observed-at 2026-08-24T10:00:00Z --description '清晰可见'",
+    "expect_output": "created",
+    "timeout_seconds": 60
+  },
+  "workflow_checks": [
+    {"workflow_id":"capture-observation","command":"go run ./cmd/orbit-notebook capture --home .runtime-capture --target M42 --instrument scope-a --observed-at 2026-08-24T10:00:00Z --description '清晰可见'","expect_output":"created"},
+    {"workflow_id":"annotate-observation","command":"rm -rf .runtime-annotate && go run ./cmd/orbit-notebook capture --home .runtime-annotate --target M31 --instrument scope-b --observed-at 2026-08-24T10:00:00Z --description '初始描述' >/dev/null && go run ./cmd/orbit-notebook annotate --home .runtime-annotate --id obs-000001 --description '补充结构' --tags deep-sky,visual","expect_output":"annotated"},
+    {"workflow_id":"review-observation","command":"rm -rf .runtime-review && go run ./cmd/orbit-notebook capture --home .runtime-review --target M13 --instrument scope-c --observed-at 2026-08-24T10:00:00Z --description '初始描述' >/dev/null && go run ./cmd/orbit-notebook review --home .runtime-review --id obs-000001 --reviewer alice --decision approve --note '信息完整'","expect_output":"reviewed"},
+    {"workflow_id":"release-bulletin","command":"rm -rf .runtime-release && go run ./cmd/orbit-notebook capture --home .runtime-release --target M8 --instrument scope-d --observed-at 2026-08-24T10:00:00Z --description '初始描述' >/dev/null && go run ./cmd/orbit-notebook review --home .runtime-release --id obs-000001 --reviewer alice --decision approve --note '信息完整' >/dev/null && go run ./cmd/orbit-notebook release --home .runtime-release --id obs-000001 --publisher bob","expect_output":"released"},
+    {"workflow_id":"search-observations","command":"rm -rf .runtime-list && go run ./cmd/orbit-notebook capture --home .runtime-list --target M42 --instrument scope-a --observed-at 2026-08-24T10:00:00Z --description '初始描述' >/dev/null && go run ./cmd/orbit-notebook list --home .runtime-list --state draft --target M42","expect_output":"M42"}
+  ]
+}
