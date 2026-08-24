@@ -1,10 +1,18 @@
 package index
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
-var lastIssued uint64
+var (
+	idMu       sync.Mutex
+	lastIssued uint64
+)
 
 func NextID(items int) string {
+	idMu.Lock()
+	defer idMu.Unlock()
 	if lastIssued < uint64(items) {
 		lastIssued = uint64(items)
 	}

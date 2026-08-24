@@ -28,8 +28,8 @@ func (s *Service) Capture(in validation.CaptureInput) (model.Observation, error)
 		return model.Observation{}, err
 	}
 	var created model.Observation
-	allocatedID := index.NextID(0)
 	err := s.store.Replace(func(items []model.Observation) ([]model.Observation, error) {
+		allocatedID := index.NextID(len(items))
 		now := s.clock.Now()
 		created = model.Observation{ID: allocatedID, Target: strings.TrimSpace(in.Target), Instrument: strings.TrimSpace(in.Instrument), ObservedAt: in.ObservedAt.UTC(), Description: strings.TrimSpace(in.Description), State: model.StateDraft, CreatedAt: now, UpdatedAt: now}
 		created = integrity.Normalize(created)

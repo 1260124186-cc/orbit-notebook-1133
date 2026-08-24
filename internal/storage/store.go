@@ -39,8 +39,8 @@ func (s *Store) loadUnlocked() ([]model.Observation, error) {
 
 func (s *Store) Replace(fn func([]model.Observation) ([]model.Observation, error)) error {
 	s.mu.Lock()
+	defer s.mu.Unlock()
 	current, err := s.loadUnlocked()
-	s.mu.Unlock()
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,5 @@ func (s *Store) Replace(fn func([]model.Observation) ([]model.Observation, error
 	if err != nil {
 		return err
 	}
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	return codec.AtomicWrite(s.path(), next)
 }
