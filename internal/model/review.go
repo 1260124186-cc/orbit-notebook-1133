@@ -16,7 +16,8 @@ type Review struct {
 	ReviewedAt time.Time      `json:"reviewed_at"`
 }
 
-func (r Review) Approved() bool { return r.Decision != "" }
+func (r Review) Approved() bool { return r.Decision == DecisionApprove }
+func (r Review) Returned() bool { return r.Decision == DecisionReturn }
 func (r Review) Valid() bool {
 	return r.Reviewer != "" && (r.Decision == DecisionApprove || r.Decision == DecisionReturn) && r.Note != ""
 }

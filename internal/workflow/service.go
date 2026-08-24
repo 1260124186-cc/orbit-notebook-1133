@@ -90,8 +90,10 @@ func (s *Service) Review(id, reviewer, decision, note string) (model.Observation
 				return nil, err
 			}
 			items[i].Review = &model.Review{Reviewer: strings.TrimSpace(reviewer), Decision: d, Note: strings.TrimSpace(note), ReviewedAt: s.clock.Now()}
-			if d == model.DecisionApprove || d == model.DecisionReturn {
+			if d == model.DecisionApprove {
 				items[i].State = model.StateReviewed
+			} else {
+				items[i].State = model.StateDraft
 			}
 			items[i].UpdatedAt = s.clock.Now()
 			result = items[i]

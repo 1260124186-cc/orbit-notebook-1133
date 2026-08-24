@@ -49,8 +49,8 @@ func Consistent(item model.Observation) error {
 	}
 	switch item.State {
 	case model.StateDraft:
-		if item.Review != nil {
-			return fmt.Errorf("draft cannot retain review")
+		if item.Review != nil && !item.Review.Returned() {
+			return fmt.Errorf("draft cannot retain non-return review")
 		}
 		if item.Bulletin != nil {
 			return fmt.Errorf("draft cannot have bulletin")
