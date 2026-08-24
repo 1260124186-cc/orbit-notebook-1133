@@ -1,0 +1,24 @@
+[
+  {
+    "id": "obs-000001",
+    "target": "M8",
+    "instrument": "scope-d",
+    "observed_at": "2026-08-24T10:00:00Z",
+    "description": "初始描述",
+    "tags": [],
+    "state": "released",
+    "created_at": "2026-08-24T01:27:54.463148Z",
+    "updated_at": "2026-08-24T01:27:54.564742Z",
+    "review": {
+      "reviewer": "alice",
+      "decision": "approve",
+      "note": "信息完整",
+      "reviewed_at": "2026-08-24T01:27:54.513898Z"
+    },
+    "bulletin": {
+      "publisher": "bob",
+      "released_at": "2026-08-24T01:27:54.564742Z",
+      "headline": "M8 · 初始描述"
+    }
+  }
+]
