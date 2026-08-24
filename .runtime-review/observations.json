@@ -1,0 +1,19 @@
+[
+  {
+    "id": "obs-000001",
+    "target": "M13",
+    "instrument": "scope-c",
+    "observed_at": "2026-08-24T10:00:00Z",
+    "description": "初始描述",
+    "tags": [],
+    "state": "reviewed",
+    "created_at": "2026-08-24T01:27:54.357054Z",
+    "updated_at": "2026-08-24T01:27:54.407288Z",
+    "review": {
+      "reviewer": "alice",
+      "decision": "approve",
+      "note": "信息完整",
+      "reviewed_at": "2026-08-24T01:27:54.407287Z"
+    }
+  }
+]
