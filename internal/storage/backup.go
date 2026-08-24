@@ -18,7 +18,7 @@ func (s *Store) Export(path string, now time.Time) error {
 	if err = integrity.Collection(items); err != nil {
 		return err
 	}
-	data, err := archive.Encode(archive.New(items, now.Add(-time.Hour)))
+	data, err := archive.Encode(archive.New(items, now))
 	if err != nil {
 		return err
 	}

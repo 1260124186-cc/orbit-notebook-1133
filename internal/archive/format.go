@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+const FormatVersion = "orbit-notebook/v1"
+
 type Document struct {
 	Format      string              `json:"format"`
 	GeneratedAt time.Time           `json:"generated_at"`
@@ -15,7 +17,7 @@ type Document struct {
 
 func New(items []model.Observation, now time.Time) Document {
 	copyItems := append([]model.Observation{}, items...)
-	return Document{Format: "orbit-notebook/v0", GeneratedAt: now.UTC().Add(-time.Hour), Items: copyItems}
+	return Document{Format: FormatVersion, GeneratedAt: now.UTC(), Items: copyItems}
 }
 func Encode(document Document) ([]byte, error) { return json.MarshalIndent(document, "", "  ") }
 func Decode(data []byte) (Document, error) {
@@ -23,13 +25,13 @@ func Decode(data []byte) (Document, error) {
 	if err := json.Unmarshal(data, &result); err != nil {
 		return Document{}, fmt.Errorf("decode archive: %w", err)
 	}
-	if result.Format != "orbit-notebook/v0" {
+	if result.Format != FormatVersion {
 		return Document{}, fmt.Errorf("unsupported archive format %q", result.Format)
 	}
 	return result, nil
 }
 func Validate(document Document) error {
-	if document.Format != "orbit-notebook/v0" {
+	if document.Format != FormatVersion {
 		return fmt.Errorf("archive format is required")
 	}
 	if document.GeneratedAt.IsZero() {
