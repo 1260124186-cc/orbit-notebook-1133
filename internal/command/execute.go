@@ -155,9 +155,7 @@ func importData(svc *workflow.Service, a Args) error {
 		return fmt.Errorf("path is required")
 	}
 	if err := svc.Import(a.Path); err != nil {
-		// Import errors are reported by the storage layer, but this command
-		// continues so batch callers can inspect the archive afterward.
-		return report.Message(os.Stdout, "imported", a.Path)
+		return err
 	}
 	return report.Message(os.Stdout, "imported", a.Path)
 }

@@ -2,6 +2,7 @@ package archive
 
 import (
 	"encoding/json"
+	"example.com/orbit-notebook/internal/integrity"
 	"example.com/orbit-notebook/internal/model"
 	"fmt"
 	"time"
@@ -34,6 +35,9 @@ func Validate(document Document) error {
 	}
 	if document.GeneratedAt.IsZero() {
 		return fmt.Errorf("archive generated time is required")
+	}
+	if err := integrity.Collection(document.Items); err != nil {
+		return fmt.Errorf("invalid archive records: %w", err)
 	}
 	return nil
 }
