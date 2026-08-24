@@ -26,11 +26,18 @@ func (s *Store) Export(path string, now time.Time) error {
 	if err = os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 		return err
 	}
-	lock, err := codec.AcquireExclusive(archive.ExportLockPath(path))
+	// ExportLockPath reserves the destination for the duration of this write only.
+	// It must be removed once the export completes (success or failure) so that
+	// the same destination path can be reused by subsequent exports. O_EXCL makes
+	// a leaked marker permanently block the destination, which is why cleanup
+	// happens in a defer rather than only on the success path.
+	lockPath := archive.ExportLockPath(path)
+	lock, err := codec.AcquireExclusive(lockPath)
 	if err != nil {
 		return fmt.Errorf("reserve export destination: %w", err)
 	}
 	defer lock.Close()
+	defer os.Remove(lockPath)
 	if err = os.WriteFile(path, append(data, '\n'), 0644); err != nil {
 		return err
 	}
