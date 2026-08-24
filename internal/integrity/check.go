@@ -52,6 +52,9 @@ func Consistent(item model.Observation) error {
 		if item.Bulletin != nil {
 			return fmt.Errorf("draft cannot have bulletin")
 		}
+		if item.Review != nil {
+			return fmt.Errorf("draft cannot have review")
+		}
 	case model.StateReviewed:
 		if item.Review == nil || !item.Review.Approved() {
 			return fmt.Errorf("reviewed item must have approval")

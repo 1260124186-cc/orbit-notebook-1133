@@ -89,6 +89,11 @@ func (s *Service) Review(id, reviewer, decision, note string) (model.Observation
 			if err := validation.ReadyForReview(items[i]); err != nil {
 				return nil, err
 			}
+			if d == model.DecisionReturn {
+				// Returns leave an unmodified, supplementable draft.
+				result = items[i]
+				return items, nil
+			}
 			items[i].Review = &model.Review{Reviewer: strings.TrimSpace(reviewer), Decision: d, Note: strings.TrimSpace(note), ReviewedAt: s.clock.Now()}
 			items[i].State = model.StateReviewed
 			items[i].UpdatedAt = s.clock.Now()
