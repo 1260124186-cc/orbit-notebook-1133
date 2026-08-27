@@ -7,11 +7,13 @@ import (
 )
 
 func Merge(left, right []model.Observation) ([]model.Observation, error) {
-	combined := append(append([]model.Observation{}, left...), right...)
 	byID := map[string]model.Observation{}
-	for _, item := range combined {
+	for _, item := range left {
+		byID[item.ID] = item
+	}
+	for _, item := range right {
 		normalized := integrity.Normalize(item)
-		if existing, ok := byID[normalized.ID]; ok && existing.UpdatedAt.After(normalized.UpdatedAt) {
+		if existing, ok := byID[normalized.ID]; ok && !existing.UpdatedAt.Before(normalized.UpdatedAt) {
 			continue
 		}
 		byID[normalized.ID] = normalized
