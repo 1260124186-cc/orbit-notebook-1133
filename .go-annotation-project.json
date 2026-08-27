@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "name": "orbit-notebook",
+  "summary": "本地天文观测资料整理与审核发布 CLI",
+  "user_roles": ["观测员", "审核员", "发布员", "查询用户"],
+  "entities": ["Observation", "Instrument", "Review", "Bulletin"],
+  "workflows": [
+    {"id":"capture-observation","name":"创建观测条目","actor":"观测员","entry":"capture 命令","steps":["校验目标、时间和仪器","创建草稿并持久化"],"success":"返回草稿编号","failure":"无效字段返回可识别错误","verification":"CLI 创建后 show 命令可读取"},
+    {"id":"annotate-observation","name":"补充观测描述","actor":"观测员","entry":"annotate 命令","steps":["加载草稿并检查状态","合并描述和标签后保存"],"success":"返回更新后的条目摘要","failure":"不存在或已发布条目拒绝修改","verification":"CLI annotate 后 show 命令显示新内容"},
+    {"id":"review-observation","name":"审核观测条目","actor":"审核员","entry":"review 命令","steps":["检查条目完整性","记录审核意见并改变状态"],"success":"通过时进入 reviewed","failure":"缺少描述或无效意见返回错误","verification":"CLI review 后 list 显示状态"},
+    {"id":"release-bulletin","name":"发布观测资料","actor":"发布员","entry":"release 命令","steps":["检查审核状态","生成摘要并写入资料索引"],"success":"返回已发布摘要","failure":"未审核或重复发布返回错误","verification":"CLI release 后 list 可检索"},
+    {"id":"search-observations","name":"查询观测资料","actor":"查询用户","entry":"list 命令","steps":["读取条目并按过滤条件筛选","按观测时间和编号排序输出"],"success":"输出稳定的 JSON 摘要","failure":"过滤条件非法返回错误","verification":"CLI list 输出目标和状态"}
+  ],
+  "module_plan": [
+    {"package":"internal/model","workflow_ids":["capture-observation","annotate-observation","review-observation","release-bulletin","search-observations"]},
+    {"package":"internal/validation","workflow_ids":["capture-observation","annotate-observation","review-observation"]},
+    {"package":"internal/workflow","workflow_ids":["capture-observation","annotate-observation","review-observation","release-bulletin","search-observations"]},
+    {"package":"internal/storage","workflow_ids":["capture-observation","annotate-observation","review-observation","release-bulletin","search-observations"]},
+    {"package":"internal/command","workflow_ids":["capture-observation","annotate-observation","review-observation","release-bulletin","search-observations"]}
+  ],
+  "interfaces": [
+    {"name":"capture CLI","workflow_ids":["capture-observation"]},
+    {"name":"annotate CLI","workflow_ids":["annotate-observation"]},
+    {"name":"review CLI","workflow_ids":["review-observation"]},
+    {"name":"release CLI","workflow_ids":["release-bulletin"]},
+    {"name":"list CLI","workflow_ids":["search-observations"]}
+  ]
+}
