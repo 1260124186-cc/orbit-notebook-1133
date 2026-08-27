@@ -10,6 +10,9 @@ func ReadyForReview(o model.Observation) error {
 	if !policy.CanReview(o) {
 		return fmt.Errorf(policy.ErrInvalidTransition)
 	}
+	if !o.HasDescription() {
+		return fmt.Errorf(policy.ErrMissingDescription)
+	}
 	return nil
 }
 func ReadyForRelease(o model.Observation) error {

@@ -37,5 +37,8 @@ func Reviewer(name, note string) error {
 	if strings.TrimSpace(name) == "" {
 		return fmt.Errorf("reviewer is required")
 	}
+	if strings.TrimSpace(note) == "" {
+		return fmt.Errorf("review note is required")
+	}
 	return nil
 }

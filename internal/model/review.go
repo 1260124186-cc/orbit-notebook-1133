@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"strings"
+	"time"
+)
 
 type ReviewDecision string
 
@@ -18,5 +21,7 @@ type Review struct {
 
 func (r Review) Approved() bool { return r.Decision == DecisionApprove }
 func (r Review) Valid() bool {
-	return r.Reviewer != "" && (r.Decision == DecisionApprove || r.Decision == DecisionReturn)
+	return strings.TrimSpace(r.Reviewer) != "" &&
+		strings.TrimSpace(r.Note) != "" &&
+		(r.Decision == DecisionApprove || r.Decision == DecisionReturn)
 }
